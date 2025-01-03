@@ -1,69 +1,67 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-<title>Live Stream Player</title>
-<link rel="icon" href="https://i.postimg.cc/qMf2prsy/20240802-005125.png"> 
-<link rel="stylesheet" type="text/css" href="https://live3.bokulsports.com/clap.css">
-<script src="//content.jwplatform.com/libraries/SAHhwvZq.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/level-selector@0.2.0/dist/level-selector.min.js"></script>
-<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
-<script src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@1.0.1/dist/hlsjs-playback.min.js"></script>
-</head>
-<body>
-<div id="player" style="height: 100%; width: 100%;"></div>
-
-<script>
-    var player = new Clappr.Player({
-        source: 'https://www.its-ferdos-alom.top/sp/mac/script.m3u8?id=18359',
-        width: '100%',
-        height: '90%',
-        autoPlay: true,
-        stretching: "exactfit",
-        aspectratio: "16:9",
-        plugins: [HlsjsPlayback, LevelSelector],
-        mimeType: "application/x-mpegURL",
-        mediacontrol: {seekbar: "red", buttons: "#fff"},
-        parentId: "#player"
-    });
-</script>
-
-<script>
-setTimeout(videovisible, 3000);
-
-function videovisible() {
-    document.getElementById('loading').style.display = 'none';
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const e = document.querySelector("video"),
-        n = e.getElementsByTagName("source")[0].src,
-        o = {};
-
-    if (Hls.isSupported()) {
-        var config = { maxMaxBufferLength: 100 };
-        const t = new Hls(config);
-
-        t.loadSource(n);
-        t.on(Hls.Events.MANIFEST_PARSED, function(n, l) {
-            const s = t.levels.map(e => e.height);
-            o.quality = {
-                default: s[0],
-                options: s,
-                forced: !0,
-                onChange: e => (function(e) {
-                    window.hls.levels.forEach((n, o) => {
-                        n.height === e && (window.hls.currentLevel = o);
-                    });
-                })(e)
-            };
-            new Plyr(e, o);
-        });
-        t.attachMedia(e);
-        window.hls = t;
-    } else {
-        new Plyr(e, o);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Video Player</title>
+  <link rel="icon" href="">
+  <script src="//content.jwplatform.com/libraries/SAHhwvZq.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/level-selector@0.2.0/dist/level-selector.min.js"></script>
+  <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+  <script src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@1.0.1/dist/hlsjs-playback.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
     }
-});
-</script>
+    #player {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="player"></div>
+
+  <script>
+    // Base URL for the m3u8 link
+    const base_url = "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/";
+
+    // Get the channel ID from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const channel_id = urlParams.get('id');
+
+    if (!channel_id) {
+      document.body.innerHTML = "<h1 style='color: white; text-align: center;'>Error: No channel ID provided.</h1>";
+      throw new Error("No channel ID provided.");
+    }
+
+    // Construct the m3u8 link
+    const m3u8_link = `${base_url}${channel_id}/playlist.m3u8`;
+
+    // Initialize the Clappr player
+    const player = new Clappr.Player({
+      source: m3u8_link,
+      width: '100%',
+      height: '100%',
+      autoPlay: true,
+      stretching: "exactfit",
+      aspectratio: "16:9",
+      plugins: [HlsjsPlayback, LevelSelector],
+      mimeType: "application/x-mpegURL",
+      mediacontrol: { seekbar: "red", buttons: "#fff" },
+      parentId: "#player"
+    });
+
+    // Hide loading screen after a delay
+    setTimeout(() => {
+      const loadingElement = document.getElementById('loading');
+      if (loadingElement) loadingElement.style.display = 'none';
+    }, 3000);
+  </script>
 </body>
-  </html>
+
+</html>
